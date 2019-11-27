@@ -1,6 +1,6 @@
 # Footerrant
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.4.
+FooterRant is an online community of Football Fans . This is an angular project which is the frontend technology stack of footerrant . Angular communicates with Spring MVC and Python Flask via REST APIs on the backend .Also Celeryis used for task queuing . Databases used are MongoDB ang PostgreSQL. The Project is Deployed on AWS . The site link is  https://footerrant.com 
 
 ## Development server
 
