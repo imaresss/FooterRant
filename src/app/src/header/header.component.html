@@ -1,0 +1,24 @@
+<mat-toolbar style="box-shadow:3px 3px #E8E8E8 !important;background-color: white">
+
+    <img [routerLink]="['/feed']" src="assets/images/fullNameLogo.svg" style="width:200px;cursor: pointer;" />
+    <span class="fillerLess"></span>
+
+    <span class="filler"></span>
+
+    <div *ngIf="!loggedIn">
+        <button type="button" (click)="check();" style="color : #e64c3c;border:none;box-shadow: white;background-color:white;outline:none"
+            class="gap"><b>Login</b></button>
+        <button type="button" (click)="check();" style="border-radius:20px;border-color: #e64c3c;color:#e64c3c;background-color:white;border-width:1px;outline:none"><b>Signup</b></button>
+    </div>
+
+
+    <div *ngIf="loggedIn" style="cursor:pointer">
+        <div [routerLink]="['/user', userInfo.id]" style="background-color: white" class="chip">
+            <img src="{{userInfo.profileUrl}}" style="width:35px;height:35px;vertical-align: middle; margin-top: 0.50em;">
+            <b class="textSize"> {{userInfo.firstName}}</b>
+        </div>
+
+    </div>
+
+
+</mat-toolbar>

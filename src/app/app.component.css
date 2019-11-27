@@ -1,0 +1,22 @@
+.filler {
+    flex: 1 1 auto;
+ }
+ .gap {
+    margin-right: 10px;
+    color:orangered;
+ }
+
+.example-card {
+  max-width: 200px;
+}
+
+.example-header-image {
+  background-size: cover;
+}
+
+mat-card {
+    background-color: lightgray;
+}
+* {
+  font-family: 'Montserrat', sans-serif;
+ }

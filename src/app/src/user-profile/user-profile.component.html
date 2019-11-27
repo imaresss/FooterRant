@@ -1,0 +1,268 @@
+<html>
+
+<head>
+  <title>FooterRant</title>
+  <meta property="og:type" content="Product">
+  <meta property="og:site_name" content="FooterRant">
+  <meta property="og:title" content="World's Biggest Community of football fans">
+  <meta property="og:image" content="https://dfainmbvtyfa7.cloudfront.net/GREETINGS/diwali-meta-image.jpg">
+  <meta property="og:url" content="https://greetings.womaniya.co/greetings/card">
+  <meta property="og:description" content="Share Your Opinion and find out whatother fans are talking abouts">
+</head>
+
+<body>
+
+
+  <nz-layout>
+
+    <!-- <app-header></app-header> -->
+    <br><br>
+
+    <div nz-row>
+      <!-- <div nz-col nzXs="2" nzSm="2" nzMd="1" nzLg="1" nzXl="1">
+      </div> -->
+      <div nz-col nzXs="0" nzSm="0" nzMd="6" nzLg="6" nzXl="6">
+
+
+
+      </div>
+
+
+      <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+
+
+        <div *ngFor="let each of userArray" style="text-align: center;background-color: white">
+          <img alt="example" style=" border-radius: 50%;width:70px;height:70px;margin-top: 20px" src="{{each.profileUrl}}" />
+
+          <div style="font-family: 'Montserrat', sans-serif; font-size: 25px;margin-top: 5px">
+            <b>{{each.firstName}}</b>
+
+          </div>
+        </div>
+
+        <nz-tabset nzSize="large">
+          <nz-tab nzTitle="Rants">
+
+            <nz-card nzBordered=false style="text-align:left;cursor: pointer;" [routerLink]="['/thisPost', each.videoId]"
+              *ngFor="let each of unPubLishedContentList;let i = index" [nzActions]="[actionSetting, actionEdit, actionEllipsis]">
+
+              <div [routerLink]="['/user', userInfo.id]" style="background-color: white" class="chip hoverIt">
+                <img src="{{userInfo.profileUrl}}" style="width:30px;height:30px;vertical-align: middle; margin-top: 0.62em;">
+                <b class="textSize">{{userInfo.firstName}}</b>
+              </div>
+              <div>
+
+                <span class="textSize" *ngFor="let eachTitle of each.splitTitle">
+
+                  <a *ngIf="eachTitle.includes('#') && eachTitle.charAt(0)=='#' && eachTitle.charAt(1) && eachTitle.charAt(1)!='#'; then hashtag else  nonhashtag"
+                    href="/hashTag/{{eachTitle}}" (click)="$event.stopPropagation()">{{eachTitle}}</a>
+                  <ng-template #hashtag>
+                    <a href="/hashtag/{{eachTitle.substr(1)}}" class="tag" (click)="$event.stopPropagation()">{{eachTitle}}</a>
+                  </ng-template>
+                  <ng-template #nonhashtag>
+                    <span class="textSize" [innerHTML]="eachTitle"></span>
+                  </ng-template>
+                  &nbsp;
+                </span>
+                <pre *ngIf="each.splitTitle.length == 0" class="textSize" [innerHTML]="each.title"></pre>
+
+
+
+              </div>
+
+              <div *ngIf='each.type === "IMAGE"'>
+                <br>
+                <img src="{{each.thumbnail1}}" style="width:100%" />
+
+              </div>
+              <div *ngIf='each.type === "LINK"'>
+                <br>
+                <iframe style="width:100%;height:300px;" [src]="sanitizer.bypassSecurityTrustResourceUrl(each.shareLink)">
+                </iframe>
+
+              </div>
+              <ng-template style="background-color: white" #actionSetting>
+                <div (click)="check();rantLike(each.videoId , !each.isLikeByMe , i);$event.stopPropagation()">
+                  <img src="assets/images/{{ each.isLikeByMe == true ? 'likefilled.png' : 'like.png'}}" />
+                  &nbsp;&nbsp;{{each.likeCount + each.fakeLike}}
+                </div>
+              </ng-template>
+              <ng-template style="background-color: white" #actionEdit>
+
+                <div (click)="check();rantComment(each.videoId);$event.stopPropagation()">
+                  <img src="assets/images/comment.png" />
+                  &nbsp;&nbsp; {{each.commentCount}}
+                </div>
+
+                <nz-modal [nzFooter]=null [(nzVisible)]="isVisible" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+                  <div>
+                    <textarea maxlength="500" rows="4" [(ngModel)]="inputValue" style="border-radius: 0px;margin-top:20px;width:100%"
+                      placeholder="Write your comment here..."></textarea>
+
+                  </div>
+                  <br>
+                  <button type="button" style="width: 100%;background-color: #e64c3c;color: white;border:none;border-radius: 0px;"
+                    (click)="rantCommentIt();" class="gap"><b>Click here to comment</b></button>
+                  <!-- <button mat-button color="primary" style="width: 100%;background-color: #e64c3c;color: white;border:none;border-radius: 0px;" (click)="rantCommentIt();"  class = "gap">Click here to comment</button> -->
+                </nz-modal>
+              </ng-template>
+              <ng-template style="background-color: white" #actionEllipsis>
+                <nz-dropdown [nzTrigger]="'click'">
+                  <img nz-dropdown style="width:20px;" src="assets/images/share.png" />
+                  <ul nz-menu nzSelectable>
+                    <li nz-menu-item>
+                      <img (click)="whatsApp(each.originalTitle);share(each.videoId);" class="shareImage" src="assets/images/whatsapp.png" />
+
+                    </li>
+                    <li nz-menu-item>
+                      <img (click)="facebook(each.originalTitle);share(each.videoId);" class="shareImage" src="assets/images/facebook.png" />
+
+                    </li>
+                    <li nz-menu-item>
+                      <img (click)="twitter(each.originalTitle);share(each.videoId);" class="shareImage" src="assets/images/twitter 1.png" />
+
+                    </li>
+                  </ul>
+                </nz-dropdown>
+                {{each.shareCount + each.fakeShare}}
+              </ng-template>
+            </nz-card>
+
+            <br>
+
+
+          </nz-tab>
+          <nz-tab nzTitle="Comments">
+
+            <nz-card nzBordered=false style="text-align:left" *ngFor="let each of commentResponse;let i = index"
+              [routerLink]="['/thisPost', each.videoId]" [nzActions]="[actionSetting2, actionEllipsis2]">
+
+              <!-- <div nz-row> -->
+              <div [routerLink]="['/user', userInfo.id]" style="background-color: white" class="chip hoverIt">
+                <img src="{{userInfo.profileUrl}}" style="width:30px;height:30px;vertical-align: middle; margin-top: 0.62em;">
+                <b class="textSize">{{userInfo.firstName}}</b>
+              </div>
+              <!-- <div nz-col nzXs="2" nzSm="4" nzMd="6" nzLg="8" nzXl="8"> -->
+
+              <div>
+
+
+                <span class="textSize" *ngFor="let eachComment of each.splitComment">
+
+                  <a *ngIf="eachComment.includes('#') && eachComment.charAt(0)=='#' && eachComment.charAt(1) && eachComment.charAt(1)!='#'; then hashtag else  nonhashtag"
+                    href="/hashTag/{{eachComment}}" (click)="$event.stopPropagation()">{{eachComment}}</a>
+                  <ng-template #hashtag>
+                    <a href="/hashtag/{{eachComment.substr(1)}}" class="tag" (click)="$event.stopPropagation()">{{eachComment}}</a>
+                  </ng-template>
+                  <ng-template #nonhashtag>
+                    <span class="textSize" [innerHTML]="eachComment"></span>
+                  </ng-template>
+                  &nbsp;
+                </span>
+                <pre *ngIf="each.splitComment.length == 0" class="textSize" [innerHTML]="each.comment"></pre>
+
+
+                <!-- <pre class = "textSize"  [innerHTML] = "each.comment"></pre> -->
+              </div>
+              <!-- </div> -->
+              <!-- <div nz-col nzXs="2" nzSm="4" nzMd="6" nzLg="8" nzXl="8"></div> -->
+              <!-- </div> -->
+
+              <ng-template style="background-color: white" #actionSetting2>
+                <div (click)="check();rantCommentLike(each.commentId ,each.videoId , !each.isLikeByMe ,i);$event.stopPropagation()">
+                  <img src="assets/images/{{ each.isLikeByMe == true ? 'likefilled.png' : 'like.png'}}" />
+                  {{each.likeCount}}
+                </div>
+              </ng-template>
+              <ng-template style="background-color: white" #actionEllipsis2>
+                <nz-dropdown [nzTrigger]="'click'">
+                  <img nz-dropdown style="width:20px;" src="assets/images/share.png" />
+                  <ul nz-menu nzSelectable>
+                    <li nz-menu-item>
+                      <img (click)="whatsApp(each.originalComment);share(each.videoId);" class="shareImage" src="assets/images/whatsapp.png" />
+
+                    </li>
+                    <li nz-menu-item>
+                      <img (click)="facebook(each.originalComment);share(each.videoId);" class="shareImage" src="assets/images/facebook.png" />
+
+                    </li>
+                    <li nz-menu-item>
+                      <img (click)="twitter(each.originalComment);share(each.videoId);" class="shareImage" src="assets/images/twitter 1.png" />
+
+                    </li>
+                  </ul>
+                </nz-dropdown>
+                {{each.shareCount}}
+              </ng-template>
+              <!-- <ng-template style = "background-color: white" #actionEllipsis2>
+            <img src = "assets/images/share.png"/>
+            {{each.shareCount}}
+        </ng-template> -->
+            </nz-card>
+
+          </nz-tab>
+
+        </nz-tabset>
+
+      </div>
+    </div>
+    <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="1000" (scrolled)="onScroll()">
+
+    </div>
+
+    <div class="notification is-warning" *ngIf="finished">
+
+
+
+    </div>
+
+  </nz-layout>
+
+  <div class="footer" *ngIf="iAmTheUser">
+    <img src="assets/images/createpost.png" class="hoverIt" style="width:60px;" (click)="check();rantPost();" />
+    <nz-modal [nzFooter]=null [(nzVisible)]="isVisibleRant" (nzOnCancel)="handleCancel()">
+      <textarea maxlength="500" rows="4" [(ngModel)]="inputValueRant" style="border-radius: 0px;margin-top:20px;width:100%"
+        placeholder="Write your post here..."></textarea>
+
+      <br><br>
+      <div *ngIf="inputTextShow">
+        <input type="text" style="width: 100%;outline:none;border-width:1px;border-color:black" [(ngModel)]="linkShare"
+          placeholder="Copy Your YouTube Link Here.. " />
+      </div>
+      <div *ngIf="url" class="img-wrap">
+
+        <span class="close" (click)="clearThumbnail1()">&times;</span>
+        <img width="100%" [src]="url">
+      </div>
+
+
+      <input hidden type="file" accept="image/*" class="hideFile" (change)="onThumbnail1Change($event);hideEmbed()"
+        #file>
+      <div class="row">
+        <div class="column">
+
+          <!-- <button nz-button nzType="default" style="width: 100%;color:black;border-color: black" (click) = "file.click()"><i nz-icon nzType="camera" nzTheme="outline"></i>Attach Image</button> -->
+          <button type="button" style="width: 100%;color:black;border-color: black;background-color:white;border-radius:5px;border-width:1px;"
+            (click)="file.click()"><i nz-icon nzType="camera" nzTheme="outline"></i>&nbsp;Attach Image</button>
+        </div>
+        <div class="column">
+
+          <button type="button" (click)="clearThumbnail1();showEmbed()" style="width: 100%;color:black;border-color: black;background-color:white;border-radius:5px;border-width:1px;"><i
+              nz-icon nzType="link" nzTheme="outline"></i>&nbsp;Embed</button>
+
+        </div>
+        <div class="column">
+
+          <button type="button" style="width: 100%;background-color: #e64c3c;color: white;border:none;border-radius: 0px;"
+            (click)="rantPostIt();"><b>Post</b></button>
+          <!-- <button nz-button nzType="default" style="width: 100%;background-color: #e64c3c;color: white;border:none;border-radius: 0px;"(click)="rantPostIt();"><b>Click here to post</b></button> -->
+
+        </div>
+
+      </div>
+      <!-- <button nz-button nzType="default" style="width: 100%;background-color: #e64c3c;color: white;border:none;border-radius: 0px;"(click)="rantPostIt();"><b>Click here to post</b></button> -->
+    </nz-modal>
+  </div>
+</body>
+
+</html>

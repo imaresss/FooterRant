@@ -1,0 +1,214 @@
+<html>
+
+<head>
+    <title>FooterRant</title>
+    <meta property="og:type" content="Product">
+    <meta property="og:site_name" content="FooterRant">
+    <meta property="og:title" content="World's Biggest Community of football fans">
+    <meta property="og:image" content="https://dfainmbvtyfa7.cloudfront.net/GREETINGS/diwali-meta-image.jpg">
+    <meta property="og:url" content="https://greetings.womaniya.co/greetings/card">
+    <meta property="og:description" content="Share Your Opinion and find out whatother fans are talking abouts">
+</head>
+
+
+<body>
+
+    <nz-layout>
+
+        <!-- <app-header  ></app-header> -->
+        <br>
+
+        <div nz-row>
+            <div nz-col nzXs="0" nzSm="0" nzMd="6" nzLg="6" nzXl="6"></div>
+
+            <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="12">
+
+                <nz-card style="text-align:left" [nzActions]="[actionSetting, actionEdit, actionEllipsis]">
+                    <div [routerLink]="['../../user', singlePostData.userDetails.id]" style="background-color: white"
+                        class="chip hoverIt">
+                        <img src="{{singlePostData.userDetails.profileUrl}}" style="width:30px;height:30px;vertical-align: middle; margin-top: 0.62em;">
+                        <b class="textSize">{{singlePostData.userDetails.firstName}}</b>
+                    </div>
+                    <br>
+                    <!-- <nz-card-meta
+                    [nzAvatar]="avatarTemplate"
+                    nzTitle="{{singlePostData.userDetails.firstName}}"
+                  ></nz-card-meta>
+                  <nz-avatar nzSrc="{{singlePostData.userDetails.profileUrl}}"></nz-avatar> -->
+                    <span class="textSize" *ngFor="let eachTitle of singlePostData.splitTitle">
+
+                        <a *ngIf="eachTitle.includes('#') && eachTitle.charAt(0)=='#' && eachTitle.charAt(1) && eachTitle.charAt(1)!='#'; then hashtag else  nonhashtag"
+                            href="/hashTag/{{eachTitle}}" (click)="$event.stopPropagation()">{{eachTitle}}</a>
+                        <ng-template #hashtag>
+                            <a href="/hashtag/{{eachTitle.substr(1)}}" class="tag" (click)="$event.stopPropagation()">{{eachTitle}}</a>
+                        </ng-template>
+                        <ng-template #nonhashtag>
+                            <span class="textSize" [innerHTML]="eachTitle"></span>
+                        </ng-template>
+                        &nbsp;
+                    </span>
+                    <pre *ngIf="singlePostData.splitTitle.length == 0" class="textSize" [innerHTML]="singlePostData.title"></pre>
+
+                    <div *ngIf='singlePostData.type === "IMAGE"'>
+                        <br>
+                        <img src="{{singlePostData.thumbnail1}}" style="width:100%" />
+
+                    </div>
+
+                    <div *ngIf='singlePostData.type === "LINK"'>
+                        <br>
+                        <iframe style="width:100%;height:300px;" [src]="sanitizer.bypassSecurityTrustResourceUrl(singlePostData.shareLink)">
+                        </iframe>
+
+                    </div>
+                    <ng-template #actionSetting>
+
+                        <img src="assets/images/{{ singlePostData.isLikeByMe == true ? 'likefilled.png' : 'like.png'}}"
+                            style="width:20px;" (click)="check();rantLike(singlePostData.videoId , !singlePostData.isLikeByMe);" />
+                        &nbsp;&nbsp; {{singlePostData.likeCount + singlePostData.fakeLike}}
+                    </ng-template>
+                    <ng-template #actionEdit>
+                        <img src="assets/images/comment.png" style="width:20px;" (click)="check();rantComment(singlePostData.videoId);" />
+                        &nbsp;&nbsp; {{singlePostData.commentCount}}
+                        <nz-modal [nzFooter]=null [(nzVisible)]="isVisible" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+
+                            <textarea rows="4" maxlength="500" [(ngModel)]="inputValue" style="border-radius: 0px;margin-top:20px;width:100%"
+                                placeholder="Write your comment here..."></textarea>
+                            <br>
+                            <br>
+                            <button type="button" style="width: 100%;background-color: #e64c3c;color: white;border:none;border-radius: 0px;"
+                                (click)="rantCommentIt();" class="gap"><b>Click here to comment</b></button>
+                            <!-- <button nz-button nzType="default" style="width: 100%;background-color: #e64c3c;color: white;border:none;border-radius: 0px;"   (click)="rantCommentIt();"  class = "gap"><b>Click here to comment</b></button> -->
+                        </nz-modal>
+                    </ng-template>
+                    <ng-template #actionEllipsis>
+                        <nz-dropdown [nzTrigger]="'click'">
+                            <img nz-dropdown style="width:20px;" src="assets/images/share.png" />
+                            <ul nz-menu nzSelectable>
+                                <li nz-menu-item>
+                                    <img (click)="whatsApp(singlePostData.originalTitle ,singlePostData.videoId);share(singlePostData.videoId);"
+                                        class="shareImage" src="../../../assets/images/whatsapp.png" />
+
+                                </li>
+                                <li nz-menu-item>
+                                    <img (click)="facebook(singlePostData.originalTitle);share(singlePostData.videoId);"
+                                        class="shareImage" src="../../../assets/images/facebook.png" />
+
+                                </li>
+                                <li nz-menu-item>
+                                    <img (click)="twitter(singlePostData.originalTitle);share(singlePostData.videoId);"
+                                        class="shareImage" src="../../../assets/images/twitter 1.png" />
+
+                                </li>
+                            </ul>
+                        </nz-dropdown>
+                        &nbsp;&nbsp;{{singlePostData.shareCount + singlePostData.fakeShare}}
+                    </ng-template>
+                </nz-card>
+                <div style="background-color:#f9f9f9;font-size: 20px;height:40px;"><b style="margin-left: 20px;vertical-align: middle">Comments</b></div>
+                <nz-card style="text-align:left;" *ngFor="let each of commentResponse;let i = index" [nzActions]="[actionSetting2, actionEllipsis2]">
+                    <div nz-row>
+                        <div nz-col nzXs="2" nzSm="2" nzMd="2" nzLg="2" nzXl="2"></div>
+
+                        <div nz-col nzXs="22" nzSm="22" nzMd="22" nzLg="22" nzXl="22">
+                            <div [routerLink]="['../../user', each.commenterId]" style="background-color: white;cursor: pointer"
+                                class="chip">
+                                <img src="{{each.commenterPicUrl}}" style="width:30px;height:30px;vertical-align: middle; margin-top: 0.62em;"
+                                    width="50" height="50">
+                                <b class="textSize"> {{each.commenterFirstName}}</b>
+                            </div>
+                            <br>
+                        </div>
+                        <div nz-col nzXs="0" nzSm="0" nzMd="0" nzLg="0" nzXl="0"></div>
+                    </div>
+
+
+                    <div nz-row>
+                        <div nz-col nzXs="2" nzSm="2" nzMd="2" nzLg="2" nzXl="2"></div>
+                        <div nz-col nzXs="22" nzSm="22" nzMd="22" nzLg="22" nzXl="22">
+
+
+                            <span class="textSize" *ngFor="let eachComment of each.splitComment">
+
+                                <a *ngIf="eachComment.includes('#') && eachComment.charAt(0)=='#' && eachComment.charAt(1) && eachComment.charAt(1)!='#'; then hashtag else  nonhashtag"
+                                    href="/hashTag/{{eachComment}}" (click)="$event.stopPropagation()">{{eachComment}}</a>
+                                <ng-template #hashtag>
+                                    <a href="/hashtag/{{eachComment.substr(1)}}" class="tag" (click)="$event.stopPropagation()">{{eachComment}}</a>
+                                </ng-template>
+                                <ng-template #nonhashtag>
+                                    <span class="textSize" [innerHTML]="eachComment"></span>
+                                </ng-template>
+                                &nbsp;
+                            </span>
+                            <pre *ngIf="each.splitComment.length == 0" class="textSize" [innerHTML]="each.comment"></pre>
+
+
+                            <!-- <pre class = "textSize"  [innerHTML] = "each.comment"></pre> -->
+
+                        </div>
+                        <div nz-col nzXs="0" nzSm="0" nzMd="0" nzLg="0" nzXl="0"></div>
+                    </div>
+
+                    <ng-template #actionSetting2>
+
+                        <img src="assets/images/{{ each.isLikeByMe == true ? 'likefilled.png' : 'like.png'}}" style="width:20px;"
+                            (click)="check();rantCommentLike(each.commentId ,each.videoId , !each.isLikeByMe ,i);" />
+                        &nbsp;&nbsp;{{each.likeCount}}
+                    </ng-template>
+                    <ng-template #actionEllipsis2>
+                        <nz-dropdown [nzTrigger]="'click'">
+                            <img nz-dropdown style="width:20px;" src="assets/images/share.png" />
+                            <ul nz-menu nzSelectable>
+                                <li nz-menu-item>
+                                    <img (click)="whatsApp(each.originalComment);shareComment(each.commentId);" class="shareImage"
+                                        src="assets/images/whatsapp.png" />
+
+                                </li>
+                                <li nz-menu-item>
+                                    <img (click)="facebook(each.originalComment);shareComment(each.commentId);" class="shareImage"
+                                        src="assets/images/facebook.png" />
+
+                                </li>
+                                <li nz-menu-item>
+                                    <img (click)="twitter(each.originalComment);shareComment(each.commentId);" class="shareImage"
+                                        src="assets/images/twitter 1.png" />
+
+                                </li>
+                            </ul>
+                        </nz-dropdown>
+                        &nbsp;&nbsp; {{each.shareCount}}
+                    </ng-template>
+                </nz-card>
+
+            </div>
+
+            <div nz-col nzXs="0" nzSm="0" nzMd="6" nzLg="6" nzXl="6"></div>
+        </div>
+        <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="1000"
+            (scrolled)="onScroll()">
+
+        </div>
+
+        <div class="notification is-warning" *ngIf="finished">
+
+
+
+        </div>
+    </nz-layout>
+    <div style=" background-color : transparent;">
+        <br>
+        <br>
+
+        <br>
+        <br>
+    </div>
+    <div class="footer">
+        <img src="assets/images/create_comment.png" style="width:60px;" class="hoverIt" (click)="check();rantComment(singlePostData.videoId);" />
+
+    </div>
+
+
+</body>
+
+
+</html>
